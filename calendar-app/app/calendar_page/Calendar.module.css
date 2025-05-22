@@ -1,0 +1,76 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+
+.dayHeader {
+    text-align: center;
+    padding: 10px;
+    background-color: #f0f0f0;
+    font-weight: bold;
+}
+
+.dayCell {
+    min-height: 100px;
+    border: 1px solid #ddd;
+    padding: 5px;
+    background-color: white;
+}
+
+.otherMonth {
+    background-color: #f9f9f9;
+    color: #aaa;
+}
+
+.dayNumber {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.event {
+    background-color: #e3f2fd;
+    padding: 2px 5px;
+    margin-bottom: 2px;
+    border-radius: 3px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.event:hover {
+    background-color: #bbdefb;
+}
+
+.currentDay {
+    background-color: #e8f5e9;
+}
+
+.navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.monthTitle {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.navButton {
+    padding: 5px 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.navButton:hover {
+    background-color: #e0e0e0;
+}

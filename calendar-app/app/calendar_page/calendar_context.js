@@ -1,61 +1,58 @@
-// app/calendar_page/calendar_context.js
 'use client';
+import { createContext, useContext, useState, useEffect } from 'react';
 
-import { createContext, useState, useEffect } from 'react';
-
-export const CalendarContext = createContext();
+const CalendarContext = createContext();
 
 export function CalendarProvider({ children }) {
-  const [viewMode, setViewMode] = useState('month');
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [currentDate, setCurrentDate] = useState(new Date());
   const [events, setEvents] = useState([]);
-  const [editEvent, setEditEvent] = useState(null);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [view, setView] = useState('month');
+  const [sortByPriority, setSortByPriority] = useState(false);
 
-  const toggleView = () => {
-    setViewMode(viewMode === 'month' ? 'week' : 'month');
-  };
+  useEffect(() => {
+    const stored = localStorage.getItem('events');
+    if (stored) setEvents(JSON.parse(stored));
+  }, []);
 
-  const sortEventsByPriority = () => {
-    const sorted = [...events].sort((a, b) => b.priority - a.priority);
-    setEvents(sorted);
-  };
+  useEffect(() => {
+    localStorage.setItem('events', JSON.stringify(events));
+  }, [events]);
 
   const addEvent = (event) => {
-    setEvents([...events, event]);
-    setModalOpen(false);
+    setEvents((prev) => [...prev, event]);
   };
 
-  const updateEvent = (updated) => {
-    setEvents(events.map(e => e.id === updated.id ? updated : e));
-    setEditModalOpen(false);
+  const updateEvent = (updatedEvent) => {
+    setEvents((prev) =>
+      prev.map((ev) => (ev.id === updatedEvent.id ? updatedEvent : ev))
+    );
   };
 
-  const deleteEvent = (id) => {
-    setEvents(events.filter(e => e.id !== id));
-    setEditModalOpen(false);
+  const deleteEvent = (eventId) => {
+    setEvents((prev) => prev.filter((ev) => ev.id !== eventId));
   };
 
   return (
-    <CalendarContext.Provider value={{
-      viewMode,
-      toggleView,
-      sortEventsByPriority,
-      selectedDate,
-      setSelectedDate,
-      events,
-      addEvent,
-      updateEvent,
-      deleteEvent,
-      editEvent,
-      setEditEvent,
-      modalOpen,
-      setModalOpen,
-      editModalOpen,
-      setEditModalOpen,
-    }}>
+    <CalendarContext.Provider
+      value={{
+        currentDate,
+        setCurrentDate,
+        selectedDate,
+        setSelectedDate,
+        events,
+        addEvent,
+        updateEvent,
+        deleteEvent,
+        view,
+        setView,
+        sortByPriority,
+        setSortByPriority,
+      }}
+    >
       {children}
     </CalendarContext.Provider>
   );
 }
+
+export const useCalendar = () => useContext(CalendarContext);

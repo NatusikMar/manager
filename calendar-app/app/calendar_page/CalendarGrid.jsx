@@ -1,95 +1,82 @@
-// app/calendar_page/CalendarGrid.jsx
 'use client';
-
-import { useContext } from 'react';
-import { CalendarContext } from './calendar_context';
-import { getDaysInMonth, getWeekDays, isToday } from './utils';
+import { useCalendar } from './calendar_context';
+import { useEffect, useMemo } from 'react';
+import './calendar.css';
 
 export default function CalendarGrid() {
   const {
-    state,
+    currentDate,
+    events,
+    view,
     setSelectedDate,
-    showEventsForDate,
-    addEvent,
-    createEventsTable
-  } = useContext(CalendarContext);
+    sortByPriority,
+  } = useCalendar();
 
-  const today = new Date();
+  // Генерация массива дней текущего месяца или недели
+  const days = useMemo(() => {
+    const date = new Date(currentDate);
+    const result = [];
 
-  if (state.isWeekView) {
-    return <WeekView />;
-  } else {
-    return <MonthView />;
-  }
+    if (view === 'month') {
+      date.setDate(1);
+      const firstDayIndex = date.getDay() || 7;
+      const startDate = new Date(date);
+      startDate.setDate(startDate.getDate() - firstDayIndex + 1);
 
-  function MonthView() {
-    const firstDay = (new Date(state.currentYear, state.currentMonth, 1).getDay() + 6) % 7;
-    const daysInMonth = getDaysInMonth(state.currentYear, state.currentMonth);
-
-    const cells = [];
-
-    // Пустые клетки перед началом месяца
-    for (let i = 0; i < firstDay; i++) {
-      cells.push(<div key={`empty-${i}`} className="day-cell empty" />);
+      for (let i = 0; i < 42; i++) {
+        const day = new Date(startDate);
+        day.setDate(startDate.getDate() + i);
+        result.push(day);
+      }
+    } else {
+      const start = new Date(currentDate);
+      const day = start.getDay() || 7;
+      start.setDate(start.getDate() - day + 1);
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(start);
+        d.setDate(start.getDate() + i);
+        result.push(d);
+      }
     }
 
-    // Дни месяца
-    for (let day = 1; day <= daysInMonth; day++) {
-      const isCurrent =
-        isToday(today, day, state.currentMonth, state.currentYear);
+    return result;
+  }, [currentDate, view]);
 
-      const handleClick = () => {
-        const selected = new Date(state.currentYear, state.currentMonth, day);
-        setSelectedDate(selected);
-        showEventsForDate(selected, `${day} ${formatMonthYear()}`);
-      };
-
-      cells.push(
-        <div
-          key={day}
-          className={`day-cell ${isCurrent ? 'today' : ''}`}
-          onClick={handleClick}
-        >
-          {day}
-        </div>
-      );
-    }
-
-    return <div className="calendar">{cells}</div>;
-  }
-
-  function WeekView() {
-    const weekDays = getWeekDays(state.weekOffset);
-
-    return (
-      <div className="calendar">
-        {weekDays.map((day, i) => {
-          const dateKey = day.toISOString().split('T')[0];
-          const isCurrent = isToday(today, day.getDate(), day.getMonth(), day.getFullYear());
-          const monthNames = [
-            'января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
-            'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'
-          ];
-
-          return (
-            <div key={dateKey} className={`day-cell ${isCurrent ? 'today' : ''}`}>
-              <div className="week-day-name">{['Пн','Вт','Ср','Чт','Пт','Сб','Вс'][i]}</div>
-              <div>{`${day.getDate()} ${monthNames[day.getMonth()]}`}</div>
-              {createEventsTable(dateKey)}
-              <button className="add-event-btn" onClick={() => addEvent(dateKey)}>
-                Добавить
-              </button>
-            </div>
-          );
-        })}
-      </div>
+  const getEventsForDay = (day) => {
+    const iso = day.toISOString().slice(0, 10);
+    let filtered = events.filter(
+      (event) => event.date === iso
     );
-  }
+    if (sortByPriority) {
+      filtered = filtered.sort((a, b) => (b.priority || 0) - (a.priority || 0));
+    }
+    return filtered;
+  };
 
-  function formatMonthYear() {
-    return new Date(state.currentYear, state.currentMonth).toLocaleString('ru-RU', {
-      month: 'long',
-      year: 'numeric',
-    });
-  }
+  return (
+    <div className={`calendar-grid ${view}`}>
+      {days.map((day, idx) => {
+        const iso = day.toISOString().slice(0, 10);
+        const isToday = iso === new Date().toISOString().slice(0, 10);
+        const dayEvents = getEventsForDay(day);
+
+        return (
+          <div
+            key={idx}
+            className={`calendar-cell ${isToday ? 'today' : ''}`}
+            onClick={() => setSelectedDate(iso)}
+          >
+            <div className="cell-date">{day.getDate()}</div>
+            <ul className="cell-events">
+              {dayEvents.map((ev) => (
+                <li key={ev.id} className={`event priority-${ev.priority || 0}`}>
+                  {ev.title}
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      })}
+    </div>
+  );
 }

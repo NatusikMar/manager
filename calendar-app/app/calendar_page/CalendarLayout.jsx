@@ -1,25 +1,23 @@
-// app/calendar_page/CalendarLayout.jsx
-import SidebarMenu from './SidebarMenu';
+'use client';
 import CalendarNavigation from './CalendarNavigation';
 import WeekdaysHeader from './WeekdaysHeader';
 import CalendarGrid from './CalendarGrid';
+import SidebarMenu from './SidebarMenu';
 import SidebarInfo from './SidebarInfo';
 import AddEventModal from './AddEventModal';
-import EditEventModal from './EditEventModal';
 import './calendar.css';
 
 export default function CalendarLayout() {
   return (
-    <div className="main-layout">
+    <div className="calendar-layout">
       <SidebarMenu />
-      <div className="calendar-container">
+      <main>
         <CalendarNavigation />
         <WeekdaysHeader />
         <CalendarGrid />
-      </div>
+      </main>
       <SidebarInfo />
       <AddEventModal />
-      <EditEventModal />
     </div>
   );
 }

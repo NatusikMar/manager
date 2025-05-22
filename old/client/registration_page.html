@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="css.css">
+</head>
+<body class="auth-page">
+    <div class="auth-box">
+        <h1 class="welcome-text">Создайте аккаунт и начните планировать!</h1>
+        <h2 class="auth-title">Регистрация</h2>
+        <form action="#" method="POST" class="auth-form">
+            <div class="input-group">
+                <label>Имя</label>
+                <input type="text" name="name" required>
+            </div>
+            <div class="input-group">
+                <label>Email</label>
+                <input type="email" name="email" required>
+            </div>
+            <div class="input-group">
+                <label>Пароль</label>
+                <input type="password" name="password" required>
+            </div>
+            <div class="input-group">
+                <label>Подтвердите пароль</label>
+                <input type="password" name="confirm_password" required>
+            </div>
+            <button type="submit" class="auth-button">Зарегистрироваться</button>
+        </form>
+        <p class="register-link">Уже есть аккаунт? 
+            <a href="index.html">Войти</a>
+        </p>
+    </div>
+</body>
+</html>

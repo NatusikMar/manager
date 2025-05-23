@@ -24,6 +24,7 @@ router.post("/", async (req, res) => {
     user_id,
     event_date,
     event_time,
+    event_end_time,
     name,
     tag,
     is_recurring,
@@ -33,9 +34,9 @@ router.post("/", async (req, res) => {
   try {
     const result = await db.query(
       `INSERT INTO events 
-       (user_id, name, event_date, event_time, tag, is_recurring, repeat_frequency) 
-       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
-      [user_id, name, event_date, event_time, tag, is_recurring, repeat_frequency]
+       (user_id, name, event_date, event_time, event_end_time, tag, is_recurring, repeat_frequency) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
+      [user_id, name, event_date, event_time, event_end_time, tag, is_recurring, repeat_frequency]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -44,22 +45,33 @@ router.post("/", async (req, res) => {
   }
 });
 
-
+// Обновить событие
 // Обновить событие
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const { time, name, tag, repeat } = req.body;
+  const { time, endTime, name, tag, repeat, repeat_frequency } = req.body;
+
   try {
     const result = await db.query(
-      "UPDATE events SET event_time = $1, name = $2, tag = $3, is_recurring = $4 WHERE id = $5 RETURNING *",
-      [time, name, tag, repeat, id]
+      `UPDATE events 
+       SET event_time = $1,
+           event_end_time = $2,
+           name = $3,
+           tag = $4,
+           is_recurring = $5,
+           repeat_frequency = $6
+       WHERE id = $7
+       RETURNING *`,
+      [time, endTime, name, tag, repeat, repeat_frequency, id]
     );
+
     res.json(result.rows[0]);
   } catch (err) {
     console.error("Ошибка при обновлении события:", err);
     res.status(500).json({ error: "Ошибка сервера" });
   }
 });
+
 
 // Удалить событие
 router.delete("/:id", async (req, res) => {

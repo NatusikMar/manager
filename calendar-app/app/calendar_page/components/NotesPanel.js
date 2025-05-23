@@ -61,13 +61,24 @@ export default function NotesPanel({ selectedDate }) {
           <ul className="notes-list">
             {events.map(event => (
               <li key={event.id} className="note-item">
-                <span className="note-time">{event.event_time?.slice(0, 5)}</span>
+                <span className="note-time">
+                    {event.event_time && event.event_end_time && (
+                    `${event.event_time.slice(0, 5)} — ${event.event_end_time.slice(0, 5)}`
+                    )}
+                    {event.event_time && !event.event_end_time && (
+                    `${event.event_time.slice(0, 5)}`
+                    )}
+                    {!event.event_time && !event.event_end_time && (
+                    'Весь день'
+                    )}
+                </span>
                 <span className="note-name">{event.name}</span>
                 {event.tag && <span className={`note-tag ${event.tag}`}></span>}
                 {event.is_recurring && <span className="note-repeat">🔁</span>}
                 <button onClick={() => handleEdit(event)}>✏️</button>
                 <button onClick={() => handleDelete(event.id)}>🗑️</button>
-              </li>
+                </li>
+
             ))}
           </ul>
         )}

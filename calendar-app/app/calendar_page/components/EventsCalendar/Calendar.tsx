@@ -1,7 +1,7 @@
 import { Calendar } from 'react-calendar'
 
 import { ICalendarComponent } from '@/core/types'
-import { ArrowLeft, ArrowRight } from '@/Images'
+import { ArrowLeft, ArrowRight } from '../../Images'
 
 export const CalendarComponent = ({ getDate }: ICalendarComponent) => {
   const date = new Date()

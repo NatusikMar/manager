@@ -1,7 +1,7 @@
-import { EventsCalendar } from './components/EventsCalendar'
-import { Header } from './components/Header'
-import Meta from './layout'
-import Main from './template'
+import { EventsCalendar } from '@/components/EventsCalendar'
+import { Header } from '@/components/Header'
+import Meta from '@/layout'
+import Main from '@/template'
 
 const Index = () => {
   return (

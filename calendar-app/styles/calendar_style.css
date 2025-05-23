@@ -37,7 +37,7 @@
 
 
 .calendar-container{
-    width: 50%;
+    width: auto;
     background: white;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -144,3 +144,64 @@
     width: 70%;
 }
 
+.notes-panel {
+  padding: 1rem;
+  width: 300px;
+  background-color: #f9f9f9;
+  border-left: 1px solid #ddd;
+}
+
+.note-item {
+  margin-bottom: 0.5rem;
+}
+
+.tag {
+  margin-left: 0.5rem;
+  color: #2196f3;
+}
+
+.repeat {
+  margin-left: 0.5rem;
+  color: #777;
+}
+
+.calendar-wrapper {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+.react-calendar {
+  border: none;
+  width: 100%;
+  font-size: 14px;
+}
+
+.react-calendar__tile {
+  border-radius: 8px;
+  padding: 10px 0;
+}
+
+.react-calendar__tile--active {
+  background: #3b82f6 !important;
+  color: #fff;
+  border-radius: 8px;
+}
+
+.react-calendar__tile--today {
+  background: #e0f2fe !important;
+  color: #111;
+  border-radius: 8px;
+}
+
+.react-calendar__navigation button {
+  background: none;
+  border: none;
+  font-size: 16px;
+  padding: 8px;
+  color: #333;
+}

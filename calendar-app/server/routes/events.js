@@ -8,7 +8,7 @@ router.get("/:date", async (req, res) => {
   const { date } = req.params;
   try {
     const result = await db.query(
-      "SELECT * FROM events WHERE date = $1 ORDER BY time",
+      "SELECT * FROM events WHERE event_date = $1 ORDER BY event_time",
       [date]
     );
     res.json(result.rows);
@@ -20,11 +20,22 @@ router.get("/:date", async (req, res) => {
 
 // Добавить новое событие
 router.post("/", async (req, res) => {
-  const { date, time, name, tag, repeat } = req.body;
+  const {
+    user_id,
+    event_date,
+    event_time,
+    name,
+    tag,
+    is_recurring,
+    repeat_frequency
+  } = req.body;
+
   try {
     const result = await db.query(
-      "INSERT INTO events (date, time, name, tag, repeat) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-      [date, time, name, tag, repeat]
+      `INSERT INTO events 
+       (user_id, name, event_date, event_time, tag, is_recurring, repeat_frequency) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+      [user_id, name, event_date, event_time, tag, is_recurring, repeat_frequency]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -33,13 +44,14 @@ router.post("/", async (req, res) => {
   }
 });
 
+
 // Обновить событие
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
   const { time, name, tag, repeat } = req.body;
   try {
     const result = await db.query(
-      "UPDATE events SET time = $1, name = $2, tag = $3, repeat = $4 WHERE id = $5 RETURNING *",
+      "UPDATE events SET event_time = $1, name = $2, tag = $3, is_recurring = $4 WHERE id = $5 RETURNING *",
       [time, name, tag, repeat, id]
     );
     res.json(result.rows[0]);

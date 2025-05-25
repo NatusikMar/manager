@@ -1,7 +1,5 @@
 import { Pool } from "pg";
 
-console.log("[db.js] DATABASE_URL:", process.env.DATABASE_URL);
-
 //console.log("Все переменные окружения:", process.env);
 
 const pool = new Pool({

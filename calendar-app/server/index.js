@@ -2,19 +2,22 @@ import "./loadEnv.js";
 
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser"; // ← добавим
 import eventsRoutes from "./routes/events.js";
 import authRoutes from "./routes/auth.js";
-
 
 const app = express();
 const port = 3001;
 
+// CORS с поддержкой куки
 app.use(cors({
   origin: "http://localhost:3000",
   credentials: true,
 }));
 
+app.use(cookieParser());
 app.use(express.json());
+
 app.use('/api', authRoutes);
 app.use('/api/events', eventsRoutes);
 

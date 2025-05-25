@@ -11,36 +11,63 @@ export default function NotesPanel({ selectedDate }) {
   const formattedDate = selectedDate.toLocaleDateString('en-CA'); // YYYY-MM-DD
 
   const fetchEvents = async () => {
-    try {
-      const res = await fetch(`http://localhost:3001/api/events/${formattedDate}`);
-      const data = await res.json();
-      setEvents(data);
-    } catch (err) {
-      console.error('Ошибка загрузки событий:', err);
+  try {
+    const res = await fetch(`http://localhost:3001/api/events/${formattedDate}`, {
+      credentials: 'include', // обязательно, иначе куки не пойдут
+    });
+
+    if (!res.ok) {
+    throw new Error(`Ошибка сервера: ${res.status}`);
+        }
+
+
+    const data = await res.json();
+
+    if (Array.isArray(data)) {
+      // фильтруем по дате на клиенте
+      const filtered = data.filter(event => event.event_date === formattedDate);
+      setEvents(filtered);
+    } else {
+      console.error('Некорректный формат данных:', data);
+      setEvents([]);
     }
-  };
+  } catch (err) {
+    console.error('Ошибка загрузки событий:', err);
+    setEvents([]);
+  }
+};
+
+
 
   useEffect(() => {
     fetchEvents();
   }, [formattedDate]);
 
   const handleDelete = async (id) => {
-    const confirmDelete = confirm('Удалить событие?');
-    if (!confirmDelete) return;
+        const confirmDelete = confirm('Удалить событие?');
+        if (!confirmDelete) return;
 
-    try {
-      const res = await fetch(`http://localhost:3001/api/events/${id}`, {
-        method: 'DELETE',
-      });
-      if (res.ok) {
-        fetchEvents(); // обновить список после удаления
-      } else {
-        console.error('Ошибка при удалении');
-      }
-    } catch (err) {
-      console.error('Ошибка:', err);
-    }
-  };
+        try {
+            const res = await fetch(`http://localhost:3001/api/events/${id}`, {
+            method: 'DELETE',
+            credentials: 'include', // ← тоже обязательно
+            });
+
+            if (res.status === 401) {
+            window.location.href = '/';
+            return;
+            }
+
+            if (res.ok) {
+            fetchEvents(); // обновить список после удаления
+            } else {
+            console.error('Ошибка при удалении');
+            }
+        } catch (err) {
+            console.error('Ошибка:', err);
+        }
+        };
+
 
   const handleEdit = (event) => {
     setEditingEvent(event);

@@ -10,6 +10,7 @@ export default function AddNoteModal({ selectedDate, onClose, onNoteAdded }) {
   const [tag, setTag] = useState('blue');
   const [isRecurring, setIsRecurring] = useState(false);
   const [repeatFrequency, setRepeatFrequency] = useState('');
+  const [repeatCount, setRepeatCount] = useState(0);
   const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
@@ -20,19 +21,27 @@ export default function AddNoteModal({ selectedDate, onClose, onNoteAdded }) {
       return;
     }
 
-    // Валидация: нельзя заполнить конец без начала
     if (endTime && !time) {
       setError('Пожалуйста, укажите время начала, если задано время окончания.');
       return;
     }
 
-    // Валидация: конец не может быть раньше начала
     if (time && endTime && endTime < time) {
       setError('Время окончания не может быть раньше времени начала.');
       return;
     }
 
-    setError(''); // сброс ошибки
+    if (isRecurring && !repeatFrequency) {
+      setError('Пожалуйста, выберите период повторения.');
+      return;
+    }
+
+    if (isRecurring && (repeatCount < 0 || repeatCount > 50)) {
+      setError('Количество повторов должно быть от 0 до 50.');
+      return;
+    }
+
+    setError('');
 
     const eventDate = selectedDate.toLocaleDateString('en-CA'); // YYYY-MM-DD
 
@@ -44,11 +53,12 @@ export default function AddNoteModal({ selectedDate, onClose, onNoteAdded }) {
       tag,
       is_recurring: isRecurring,
       repeat_frequency: isRecurring ? repeatFrequency : null,
-      user_id: 1 // временно
+      repeat_count: isRecurring ? repeatCount : 0,
+      user_id: 1 // временно, пока не подключена авторизация
     };
 
     try {
-      const res = await fetch('http://localhost:3001/api/events', {
+      const res = await fetch('/api/events', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newEvent),
@@ -58,10 +68,12 @@ export default function AddNoteModal({ selectedDate, onClose, onNoteAdded }) {
         onNoteAdded();
         onClose();
       } else {
-        console.error('Ошибка при добавлении заметки');
+        const errorData = await res.json();
+        setError(errorData.message || 'Ошибка при добавлении заметки');
       }
     } catch (err) {
       console.error('Ошибка:', err);
+      setError('Ошибка подключения к серверу');
     }
   };
 
@@ -114,14 +126,27 @@ export default function AddNoteModal({ selectedDate, onClose, onNoteAdded }) {
         </label>
 
         {isRecurring && (
-          <select
-            value={repeatFrequency}
-            onChange={(e) => setRepeatFrequency(e.target.value)}
-          >
-            <option value="weekly">Раз в неделю</option>
-            <option value="monthly">Раз в месяц</option>
-            <option value="yearly">Раз в год</option>
-          </select>
+          <>
+            <select
+              value={repeatFrequency}
+              onChange={(e) => setRepeatFrequency(e.target.value)}
+            >
+              <option value="">Выберите период</option>
+              <option value="weekly">Раз в неделю</option>
+              <option value="monthly">Раз в месяц</option>
+              <option value="yearly">Раз в год</option>
+            </select>
+
+            <input
+              type="number"
+              min={0}
+              max={50}
+              value={repeatCount}
+              onChange={(e) => setRepeatCount(parseInt(e.target.value) || 0)}
+              placeholder="Сколько раз повторить"
+              required
+            />
+          </>
         )}
 
         <div className="modal-buttons">

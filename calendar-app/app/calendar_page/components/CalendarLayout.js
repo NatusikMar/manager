@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect } from 'react';
+
 import { useState } from 'react';
 import SidebarMenu from './SidebarMenu';
 import CalendarContainer from './CalendarContainer';
@@ -7,7 +9,7 @@ import NotesPanel from './NotesPanel';
 import AddNoteModal from './AddNoteModal'; // подключи модальное окно
 import '../../../styles/calendar_style.css';
 
-export default function CalendarLayout() {
+export default function CalendarLayout({ username }){
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showModal, setShowModal] = useState(false);
 
@@ -19,6 +21,9 @@ export default function CalendarLayout() {
 
   return (
     <div className="main-layout">
+      <header className="calendar-header">
+        <h2>Привет, {username}!</h2>
+      </header>
       <SidebarMenu
         selectedDate={selectedDate}
         onAddNote={handleNoteAdded}

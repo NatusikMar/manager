@@ -5,7 +5,7 @@ import pool from "../db.js";
 import authenticateToken from "./authMiddleware.js";
 
 const router = express.Router();
-const JWT_SECRET = "supersecret";
+const jwtSecret = process.env.JWT_SECRET;
 
 // POST /api/login
 router.post("/login", async (req, res) => {
@@ -26,7 +26,7 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ error: "Неверный email или пароль." });
     }
 
-    const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: "7d" });
+    const token = jwt.sign({ id: user.id, email: user.email }, jwtSecret, { expiresIn: "1d" });
 
     res.cookie("token", token, {
       httpOnly: true,

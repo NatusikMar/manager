@@ -8,19 +8,7 @@ export default function EditNoteModal({ event, onClose, onUpdated }) {
   const [time, setTime] = useState(event.event_time?.slice(0, 5) || '');
   const [endTime, setEndTime] = useState(event.event_end_time?.slice(0, 5) || '');
   const [tag, setTag] = useState(event.tag || 'blue');
-  const [isRecurring, setIsRecurring] = useState(event.is_recurring ?? false);
-  const [repeatFrequency, setRepeatFrequency] = useState(event.repeat_frequency ?? '');
-
   const [error, setError] = useState('');
-
-  const handleRecurringChange = (checked) => {
-    setIsRecurring(checked);
-    if (checked && !repeatFrequency) {
-      setRepeatFrequency('weekly'); // Автозаполнение
-    } else if (!checked) {
-      setRepeatFrequency('');
-    }
-  };
 
   const isTimeValid = (start, end) => {
     if (!start || !end) return true;
@@ -44,11 +32,9 @@ export default function EditNoteModal({ event, onClose, onUpdated }) {
 
     const updatedEvent = {
       name,
-      time: time || null,
-      endTime: endTime || null,
-      tag,
-      repeat: isRecurring,
-      repeat_frequency: isRecurring ? repeatFrequency : null
+      event_time: time || null,
+      event_end_time: endTime || null,
+      tag
     };
 
     try {
@@ -106,27 +92,6 @@ export default function EditNoteModal({ event, onClose, onUpdated }) {
           <option value="green">Зелёный</option>
           <option value="red">Красный</option>
         </select>
-
-        <label>
-          <input
-            type="checkbox"
-            checked={isRecurring}
-            onChange={(e) => handleRecurringChange(e.target.checked)}
-          />
-          Повторяется
-        </label>
-
-        {isRecurring && (
-          <select
-            value={repeatFrequency}
-            onChange={(e) => setRepeatFrequency(e.target.value)}
-            required
-          >
-            <option value="weekly">Раз в неделю</option>
-            <option value="monthly">Раз в месяц</option>
-            <option value="yearly">Раз в год</option>
-          </select>
-        )}
 
         <div className="modal-buttons">
           <button type="submit">Сохранить</button>

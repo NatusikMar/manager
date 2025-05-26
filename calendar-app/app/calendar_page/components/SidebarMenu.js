@@ -1,6 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, {
+  useEffect,
+  useState,
+  forwardRef,
+  useImperativeHandle
+} from 'react';
 import AddNoteModal from './AddNoteModal';
 
 export default function SidebarMenu({ selectedDate, onAddNote, onTodayClick }) {

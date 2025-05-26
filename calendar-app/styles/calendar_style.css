@@ -145,10 +145,14 @@
 }
 
 .notes-panel {
-  padding: 1rem;
-  width: 300px;
+  flex-grow: 1;
   background-color: #f9f9f9;
+  padding: 20px;
+  margin-left: 10px; /* расстояние от календаря */
   border-left: 1px solid #ddd;
+  border-radius: 20px;
+  max-width: 600px; /* ограничение по ширине, чтобы не растягивалось слишком сильно */
+  min-width: 350px;
 }
 
 .note-item {
@@ -177,8 +181,7 @@
 
 .react-calendar {
   border: none;
-  width: 100%;
-  font-size: 14px;
+  width: 500px;
 }
 
 .react-calendar__tile {

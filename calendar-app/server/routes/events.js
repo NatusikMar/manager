@@ -34,7 +34,7 @@ router.get("/user", async (req, res) => {
 
 
 // Получить события на дату
-router.get("/:date", async (req, res) => {
+router.get("/data/:date", async (req, res) => {
 
   const { date } = req.params;
   const userId = req.user.id; // ← из токена
@@ -51,28 +51,29 @@ router.get("/:date", async (req, res) => {
 });
 
 // Добавить новое событие
-router.post("/", async (req, res) => {
+router.post("/add", async (req, res) => {
   const {
     name,
-    event_date,
-    event_time,
-    event_end_time,
-    tag,
-    repeat_frequency,
-    repeat_count = 0,
-  } = req.body;
+  event_date,
+  event_time,
+  event_end_time,
+  tag,
+  is_recurring,         
+  repeat_frequency,
+  repeat_count = 0,
+} = req.body;
 
   const userId = req.user.id;
-  const repeat_interval = repeat_frequency;
+  const repeat_interval = is_recurring ? repeat_frequency : null;
 
   try {
     const baseDate = new Date(event_date);
     const events = [];
 
     for (let i = 0; i <= repeat_count; i++) {
-      let currentDate = baseDate;
+      let currentDate = new Date(baseDate); // создаем копию, чтобы не менять оригинал
 
-      if (i > 0) {
+      if (i > 0 && repeat_interval) {
         if (repeat_interval === "weekly") {
           currentDate = addDays(baseDate, i * 7);
         } else if (repeat_interval === "monthly") {
@@ -89,7 +90,7 @@ router.post("/", async (req, res) => {
         event_time,
         event_end_time,
         tag,
-        repeat_interval
+        repeat_interval || null
       ]);
     }
 

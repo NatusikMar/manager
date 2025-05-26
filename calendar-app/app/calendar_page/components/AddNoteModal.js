@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import './AddNoteModal.css';
 
-export default function AddNoteModal({ selectedDate, onClose, onNoteAdded }) {
+export default function AddNoteModal({ selectedDate, onClose, onNoteAdded}) {
   const [name, setName] = useState('');
   const [time, setTime] = useState('');
   const [endTime, setEndTime] = useState('');
@@ -43,7 +43,9 @@ export default function AddNoteModal({ selectedDate, onClose, onNoteAdded }) {
 
     setError('');
 
+    // Преобразуем выбранную дату в строку формата YYYY-MM-DD
     const eventDate = selectedDate.toLocaleDateString('en-CA'); // YYYY-MM-DD
+
 
     const newEvent = {
       name,
@@ -53,15 +55,15 @@ export default function AddNoteModal({ selectedDate, onClose, onNoteAdded }) {
       tag,
       is_recurring: isRecurring,
       repeat_frequency: isRecurring ? repeatFrequency : null,
-      repeat_count: isRecurring ? repeatCount : 0,
-      user_id: 1 // временно, пока не подключена авторизация
+      repeat_count: isRecurring ? repeatCount : 0
     };
 
     try {
-      const res = await fetch('/api/events', {
+      const res = await fetch('http://localhost:3001/api/events/add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newEvent),
+        credentials: 'include',
       });
 
       if (res.ok) {
@@ -111,9 +113,9 @@ export default function AddNoteModal({ selectedDate, onClose, onNoteAdded }) {
         </label>
 
         <select value={tag} onChange={(e) => setTag(e.target.value)}>
-          <option value="blue">Синий</option>
-          <option value="green">Зелёный</option>
-          <option value="red">Красный</option>
+          <option value="blue">Учеба</option>
+          <option value="green">Личное</option>
+          <option value="red">Важное</option>
         </select>
 
         <label>

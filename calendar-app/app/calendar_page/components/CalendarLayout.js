@@ -1,42 +1,47 @@
 'use client';
 
-import { useEffect } from 'react';
-
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import SidebarMenu from './SidebarMenu';
 import CalendarContainer from './CalendarContainer';
 import NotesPanel from './NotesPanel';
-import AddNoteModal from './AddNoteModal'; // подключи модальное окно
+import AddNoteModal from './AddNoteModal';
 import '../../../styles/calendar_style.css';
 
-export default function CalendarLayout({ username }){
+export default function CalendarLayout({ username }) {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showModal, setShowModal] = useState(false);
+  const notesPanelRef = useRef();
 
-  // Обновление при добавлении новой заметки
   const handleNoteAdded = () => {
     setShowModal(false);
-    setSelectedDate(new Date(selectedDate)); // триггер перерисовки NotesPanel
+    if (notesPanelRef.current) {
+      notesPanelRef.current.refreshEvents(); // 🔁 обновляем события
+    }
   };
 
   return (
     <div className="main-layout">
+      <div >
       <header className="calendar-header">
         <h2>Привет, {username}!</h2>
       </header>
+
       <SidebarMenu
         selectedDate={selectedDate}
         onAddNote={handleNoteAdded}
         onTodayClick={() => setSelectedDate(new Date())}
-        />
-
+      />
+      </div>
 
       <CalendarContainer
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
       />
 
-      <NotesPanel selectedDate={selectedDate} />
+      <NotesPanel
+        ref={notesPanelRef}
+        selectedDate={selectedDate}
+      />
 
       {showModal && (
         <AddNoteModal

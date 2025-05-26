@@ -29,19 +29,24 @@ export default function EditNoteModal({ event, onClose, onUpdated }) {
     }
 
     setError('');
+    const eventDate = new Date(event.event_date).toLocaleDateString('en-CA'); // YYYY-MM-DD без смещения
 
-    const updatedEvent = {
-      name,
-      event_time: time || null,
-      event_end_time: endTime || null,
-      tag
-    };
+
+  const updatedEvent = {
+    name,
+    event_date: eventDate,
+    event_time: time || null,
+    event_end_time: endTime || null,
+    tag
+  };
+
 
     try {
       const res = await fetch(`http://localhost:3001/api/events/${event.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedEvent),
+        credentials: 'include',
       });
 
       if (res.ok) {

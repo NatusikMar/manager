@@ -3,7 +3,6 @@
   border-radius: 10px;
   padding: 16px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  max-height: 300px;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -28,7 +27,6 @@
 }
 
 .note-item {
-  display: flex;
   align-items: center;
   gap: 8px;
   padding: 6px 8px;
@@ -69,3 +67,144 @@
   font-style: italic;
   padding: 8px;
 }
+
+.note-tag {
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background-color: #eee;
+}
+
+.note-tag.red {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+.note-tag.green {
+  background-color: #d4edda;
+  color: #155724;
+}
+.note-tag.blue {
+  background-color: #d1ecf1;
+  color: #0c5460;
+}
+
+.note-item {
+  flex-direction: column;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  background: white;
+  word-wrap: break-word;
+}
+
+.note-name {
+  font-weight: 500;
+  margin-top: 4px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 4.5em;
+  overflow-y: auto;
+}
+
+.filters {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.notes-scroll {
+  max-height: 65vh;
+  overflow-y: auto;
+}
+
+.notes-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.notes-list.list .note-item {
+  display: inline-block;
+  flex-direction: column;
+  padding: 12px;
+  border: 1px solid #ccc;
+
+  margin: 5px;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.notes-list.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.notes-list.cards .note-item {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 14px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.note-header {
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.note-name {
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 6px 0;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.note-tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 6px;
+  margin-top: 4px;
+  width: fit-content;
+}
+
+.note-tag.red {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.note-tag.green {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.note-tag.blue {
+  background-color: #d1ecf1;
+  color: #0c5460;
+}
+
+.note-repeat {
+  font-size: 0.85rem;
+}
+
+.note-actions {
+  margin-top: 6px;
+  display: flex;
+  gap: 10px;
+}
+

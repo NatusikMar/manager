@@ -82,4 +82,17 @@ router.get("/calendar/events", authenticateToken, async (req, res) => {
   }
 });
 
+// POST /api/logout
+router.post("/logout", (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: false, 
+    sameSite: "lax",
+  });
+
+  res.json({ message: "Вы успешно вышли из аккаунта." });
+});
+
+
+
 export default router;

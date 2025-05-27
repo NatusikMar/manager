@@ -42,7 +42,7 @@ export default function EditNoteModal({ event, onClose, onUpdated }) {
 
 
     try {
-      const res = await fetch(`http://localhost:3001/api/events/${event.id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/events/${event.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedEvent),

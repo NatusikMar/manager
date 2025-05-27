@@ -17,7 +17,7 @@ export default function SidebarMenu({ selectedDate, onAddNote, onTodayClick }) {
 
     const handleLogout = async () => {
         try {
-        await fetch('http://localhost:3001/api/logout', {
+        await fetch('http://localhost:3000/api/logout', {
             method: 'POST',
             credentials: 'include',
         });
@@ -40,15 +40,15 @@ export default function SidebarMenu({ selectedDate, onAddNote, onTodayClick }) {
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
 
     // 👉 Регистрируем сразу, без 'load'
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js', { scope: '/calendar_page' })
-            .then(reg => {
-                console.log('✅ Service Worker зарегистрирован:', reg);
-            })
-            .catch(err => {
-                console.error('❌ Ошибка регистрации Service Worker:', err);
-            });
-    }
+    // if ('serviceWorker' in navigator) {
+    //     navigator.serviceWorker.register('/sw.js', { scope: '/calendar_page' })
+    //         .then(reg => {
+    //             console.log('✅ Service Worker зарегистрирован:', reg);
+    //         })
+    //         .catch(err => {
+    //             console.error('❌ Ошибка регистрации Service Worker:', err);
+    //         });
+    // }
 
     return () => {
         window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);

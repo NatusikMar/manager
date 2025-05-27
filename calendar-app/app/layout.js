@@ -1,6 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
-// import "./globals.css";
 import "../styles/css.css";
+import RegisterSW from "./calendar_page/components/RegisterSW"; // добавляем
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,6 +30,7 @@ export default function RootLayout({ children }) {
         <link rel="icon" href="/icons/icon-192x192.png" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <RegisterSW /> {/* вставляем сюда */}
         {children}
       </body>
     </html>

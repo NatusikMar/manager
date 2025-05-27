@@ -59,7 +59,7 @@ export default function AddNoteModal({ selectedDate, onClose, onNoteAdded}) {
     };
 
     try {
-      const res = await fetch('http://localhost:3001/api/events/add', {
+      const res = await fetch('http://localhost:3000/api/events/add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newEvent),

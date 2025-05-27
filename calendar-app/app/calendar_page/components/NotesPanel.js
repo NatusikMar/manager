@@ -17,32 +17,37 @@ const NotesPanel = forwardRef(({ selectedDate }, ref) => {
   const formattedDate = selectedDate.toLocaleDateString('en-CA');
 
   const fetchEvents = async () => {
-    try {
-      const res = await fetch(`http://localhost:3001/api/events/data/${formattedDate}`, {
-        credentials: 'include',
-      });
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/events/data/${formattedDate}`, {
+      credentials: 'include',
+    });
 
-      if (!res.ok) throw new Error(`Ошибка сервера: ${res.status}`);
+    if (!res.ok) {
+      console.warn(`Ошибка загрузки событий за ${formattedDate}: статус ${res.status}`);
+      setEvents([]);
+      return;
+    }
 
-      const data = await res.json();
+    const data = await res.json();
 
-      if (Array.isArray(data)) {
-        const filtered = data
-          .filter(event => new Date(event.event_date).toLocaleDateString('en-CA') === formattedDate)
-          .map(event => ({
-            ...event,
-            is_recurring: !!event.repeat_interval,
-          }));
-        setEvents(filtered);
-      } else {
-        console.error('Некорректный формат данных:', data);
-        setEvents([]);
-      }
-    } catch (err) {
-      console.error('Ошибка загрузки событий:', err);
+    if (Array.isArray(data)) {
+      const filtered = data
+        .filter(event => new Date(event.event_date).toLocaleDateString('en-CA') === formattedDate)
+        .map(event => ({
+          ...event,
+          is_recurring: !!event.repeat_interval,
+        }));
+      setEvents(filtered);
+    } else {
+      console.error('Некорректный формат данных:', data);
       setEvents([]);
     }
-  };
+  } catch (err) {
+    console.error(`Ошибка загрузки событий за ${formattedDate}:`, err);
+    setEvents([]);
+  }
+};
+
 
   useEffect(() => {
     fetchEvents();
@@ -55,7 +60,7 @@ const NotesPanel = forwardRef(({ selectedDate }, ref) => {
   const handleDelete = async (id) => {
     if (!confirm('Удалить событие?')) return;
     try {
-      const res = await fetch(`http://localhost:3001/api/events/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/events/${id}`, {
         method: 'DELETE',
         credentials: 'include',
       });

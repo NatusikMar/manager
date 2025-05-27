@@ -4,11 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"npm run server\" \"next dev\"",
-    "server": "node server/index.js",
+    "dev": "cross-env NODE_ENV=development node server/index.js",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "cross-env NODE_ENV=production node server/index.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
@@ -26,6 +24,7 @@
   "devDependencies": {
     "autoprefixer": "^10.4.21",
     "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3",
     "postcss": "^8.5.3",
     "tailwindcss": "^4.1.7"
   }

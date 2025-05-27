@@ -17,15 +17,14 @@ export default function CalendarPage() {
         router.push("/");
       } else {
         setUsername(userData.username);
-        setLoading(false); // ← правильный вызов
+        setLoading(false); 
       }
     };
 
     fetchUser();
   }, [router]);
 
-  if (loading) return null; // или <LoadingSpinner />
-
+  if (loading) return null; 
   return (
     <main>
       <CalendarLayout username={username} />

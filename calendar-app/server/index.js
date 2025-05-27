@@ -2,7 +2,7 @@ import "./loadEnv.js";
 
 import express from "express";
 import cors from "cors";
-import cookieParser from "cookie-parser"; // ← добавим
+import cookieParser from "cookie-parser"; 
 import eventsRoutes from "./routes/events.js";
 import authRoutes from "./routes/auth.js";
 

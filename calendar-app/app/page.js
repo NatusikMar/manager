@@ -1,8 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect  } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import Head from "next/head";
+
 
 export default function Home() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -39,12 +39,9 @@ export default function Home() {
     }
   };
 
+
   return (
     <>
-      <Head>
-        <title>Менеджер задач и событий</title>
-        <meta name="description" content="Вход в менеджер задач и событий" />
-      </Head>
       <div className="auth-page">
         <div className="auth-box">
           <h1 className="welcome-text">Добро пожаловать в менеджер задач и событий!</h1>

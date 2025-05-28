@@ -66,3 +66,10 @@ export async function updateQueuedNote(queueId, updatedNote) {
 
   await tx.done;
 }
+
+export async function clearLocalData() {
+  const db = await initDB();
+  const tx = db.transaction('queue', 'readwrite');
+  await tx.objectStore('queue').clear();
+  await tx.done;
+}

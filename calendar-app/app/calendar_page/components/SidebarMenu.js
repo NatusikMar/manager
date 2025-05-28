@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import AddNoteModal from './AddNoteModal';
+import { clearLocalData } from '../utils/localDB';
+
 
 export default function SidebarMenu({ selectedDate, onAddNote, onTodayClick }) {
     const [showModal, setShowModal] = useState(false);
@@ -24,6 +26,14 @@ export default function SidebarMenu({ selectedDate, onAddNote, onTodayClick }) {
         } catch (error) {
         console.error('Ошибка выхода:', error);
         } finally {
+        await clearLocalData();
+
+            // Очистка PWA-кэша
+        if ('caches' in window) {
+            const keys = await caches.keys();
+            await Promise.all(keys.map(key => caches.delete(key)));
+            }
+
         router.push('/'); 
         }
     };

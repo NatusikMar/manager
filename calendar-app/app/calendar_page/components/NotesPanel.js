@@ -8,6 +8,10 @@ import React, {
 } from 'react';
 import './NotesPanel.css';
 import EditNoteModal from './EditNoteModal';
+import {
+  getOfflineEventsByDate,
+  deleteQueuedNote,
+} from '../utils/localDB';
 
 const NotesPanel = forwardRef(({ selectedDate }, ref) => {
   const [events, setEvents] = useState([]);
@@ -17,37 +21,32 @@ const NotesPanel = forwardRef(({ selectedDate }, ref) => {
   const formattedDate = selectedDate.toLocaleDateString('en-CA');
 
   const fetchEvents = async () => {
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/events/data/${formattedDate}`, {
-      credentials: 'include',
-    });
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/events/data/${formattedDate}`, {
+        credentials: 'include',
+      });
 
-    if (!res.ok) {
-      console.warn(`Ошибка загрузки событий за ${formattedDate}: статус ${res.status}`);
-      setEvents([]);
-      return;
-    }
+      if (!res.ok) throw new Error(`Ошибка сервера: ${res.status}`);
 
-    const data = await res.json();
+      const data = await res.json();
+      if (!Array.isArray(data)) throw new Error('Неверный формат данных');
 
-    if (Array.isArray(data)) {
       const filtered = data
         .filter(event => new Date(event.event_date).toLocaleDateString('en-CA') === formattedDate)
         .map(event => ({
           ...event,
+          fromCache: false,
           is_recurring: !!event.repeat_interval,
         }));
-      setEvents(filtered);
-    } else {
-      console.error('Некорректный формат данных:', data);
-      setEvents([]);
-    }
-  } catch (err) {
-    console.error(`Ошибка загрузки событий за ${formattedDate}:`, err);
-    setEvents([]);
-  }
-};
 
+      const offlineEvents = await getOfflineEventsByDate(formattedDate);
+      setEvents([...filtered, ...offlineEvents]);
+    } catch (err) {
+      console.warn('Оффлайн. Загружаю только локальные события:', err);
+      const offlineEvents = await getOfflineEventsByDate(formattedDate);
+      setEvents(offlineEvents);
+    }
+  };
 
   useEffect(() => {
     fetchEvents();
@@ -57,17 +56,26 @@ const NotesPanel = forwardRef(({ selectedDate }, ref) => {
     refreshEvents: fetchEvents,
   }));
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id, isOffline, queueId) => {
     if (!confirm('Удалить событие?')) return;
+
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/events/${id}`, {
-        method: 'DELETE',
-        credentials: 'include',
-      });
-      if (res.ok) fetchEvents();
-      else console.error('Ошибка при удалении');
+      if (isOffline && queueId != null) {
+        await deleteQueuedNote(queueId);
+        fetchEvents();
+      } else if (navigator.onLine) {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/events/${id}`, {
+          method: 'DELETE',
+          credentials: 'include',
+        });
+
+        if (res.ok) fetchEvents();
+        else console.error('Ошибка при удалении');
+      } else {
+        console.warn('Оффлайн: не могу удалить событие с сервера');
+      }
     } catch (err) {
-      console.error('Ошибка:', err);
+      console.error('Ошибка удаления:', err);
     }
   };
 
@@ -109,17 +117,24 @@ const NotesPanel = forwardRef(({ selectedDate }, ref) => {
         ) : (
           <ul className="notes-list list">
             {sortedEvents.map(event => (
-              <li key={event.id} className="note-item list">
+              <li
+                key={event.id || event.queueId}
+                className={`note-item list
+                  ${event.isOffline ? 'offline' : ''}
+                  ${event.fromCache ? 'local' : ''}
+                `}
+              >
                 <div className="note-header">
+                  {event.fromCache && (
+                    <span className="cache-indicator" title="Кэшированное событие"></span>
+                  )}
                   <span className="note-time">
                     {event.event_time && event.event_end_time
                       ? `${event.event_time.slice(0, 5)} — ${event.event_end_time.slice(0, 5)}`
                       : event.event_time
-                      ? `${event.event_time.slice(0, 5)}`
-                      : 'Весь день'}
+                        ? `${event.event_time.slice(0, 5)}`
+                        : 'Весь день'}
                   </span>
-
-                  
                 </div>
 
                 <div className="note-name">{event.name}</div>
@@ -133,8 +148,16 @@ const NotesPanel = forwardRef(({ selectedDate }, ref) => {
                 )}
 
                 <div className="note-actions">
+                  {!navigator.onLine && !event.local ? (
+                <span className="readonly-info">📄 Только просмотр</span>
+              ) : (
+                <>
                   <button onClick={() => handleEdit(event)}>✏️</button>
-                  <button onClick={() => handleDelete(event.id)}>🗑️</button>
+                  <button onClick={() => handleDelete(event.id, event.isOffline, event.queueId)}>🗑️</button>
+                </>
+              )}
+
+
                 </div>
               </li>
             ))}

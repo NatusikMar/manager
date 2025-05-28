@@ -147,3 +147,19 @@
   display: flex;
   gap: 10px;
 }
+
+.note-item.offline {
+  border-left: 4px dashed orange;
+  background-color: #fffbe6;
+}
+
+.note-item.cached {
+  border-left: 4px solid orange;
+  opacity: 0.85;
+}
+
+.readonly-info {
+  font-size: 0.85em;
+  color: #a55500;
+  margin-left: 0.5rem;
+}

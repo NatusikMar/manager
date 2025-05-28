@@ -2,6 +2,8 @@
 
 import React, { useState } from 'react';
 import './AddNoteModal.css';
+import { queueNote } from '../utils/localDB';
+
 
 export default function AddNoteModal({ selectedDate, onClose, onNoteAdded}) {
   const [name, setName] = useState('');
@@ -59,24 +61,32 @@ export default function AddNoteModal({ selectedDate, onClose, onNoteAdded}) {
     };
 
     try {
-      const res = await fetch('http://localhost:3000/api/events/add', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newEvent),
-        credentials: 'include',
-      });
+        if (!navigator.onLine) {
+          await queueNote(newEvent);
+          onNoteAdded();
+          onClose();
+          return;
+        }
 
-      if (res.ok) {
-        onNoteAdded();
-        onClose();
-      } else {
-        const errorData = await res.json();
-        setError(errorData.message || 'Ошибка при добавлении заметки');
+        const res = await fetch('http://localhost:3000/api/events/add', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newEvent),
+          credentials: 'include',
+        });
+
+        if (res.ok) {
+          onNoteAdded();
+          onClose();
+        } else {
+          const errorData = await res.json();
+          setError(errorData.message || 'Ошибка при добавлении заметки');
+        }
+      } catch (err) {
+        console.error('Ошибка:', err);
+        setError('Ошибка подключения к серверу');
       }
-    } catch (err) {
-      console.error('Ошибка:', err);
-      setError('Ошибка подключения к серверу');
-    }
+
   };
 
   return (

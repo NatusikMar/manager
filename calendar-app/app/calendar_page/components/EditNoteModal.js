@@ -2,6 +2,8 @@
 
 import React, { useState } from 'react';
 import './AddNoteModal.css';
+import { updateQueuedNote } from '../utils/localDB';
+
 
 export default function EditNoteModal({ event, onClose, onUpdated }) {
   const [name, setName] = useState(event.name);
@@ -42,6 +44,20 @@ export default function EditNoteModal({ event, onClose, onUpdated }) {
 
 
     try {
+      if (event.isOffline && event.queueId != null) {
+        await updateQueuedNote(event.queueId, {
+          ...event,
+          name,
+          event_time: time || null,
+          event_end_time: endTime || null,
+          tag,
+        });
+        onUpdated();
+        onClose();
+        return;
+      }
+
+      // обычный онлайн-запрос
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/events/${event.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -58,6 +74,7 @@ export default function EditNoteModal({ event, onClose, onUpdated }) {
     } catch (err) {
       console.error('Ошибка:', err);
     }
+
   };
 
   return (

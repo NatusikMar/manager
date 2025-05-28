@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import SidebarMenu from './SidebarMenu';
 import CalendarContainer from './CalendarContainer';
 import NotesPanel from './NotesPanel';
 import AddNoteModal from './AddNoteModal';
+import { syncNotes } from '../utils/syncOffline'; // добавим импорт
 import '../../../styles/calendar_style.css';
 
 export default function CalendarLayout({ username }) {
@@ -19,21 +20,31 @@ export default function CalendarLayout({ username }) {
     }
   };
 
-  
+  useEffect(() => {
+    const handleOnline = async () => {
+      console.log('📶 Интернет восстановлен. Синхронизация...');
+      await syncNotes();
+      if (notesPanelRef.current) {
+        notesPanelRef.current.refreshEvents(); // 🔁 обновляем события после синхронизации
+      }
+    };
+
+    window.addEventListener('online', handleOnline);
+    return () => window.removeEventListener('online', handleOnline);
+  }, []);
 
   return (
-    <div className="main-layout">
-      <div >
-      <header className="calendar-header">
-        <h2>Привет, {username}!</h2>
-      </header>
+  <div className="main-layout">
+    <header className="calendar-header">
+      <h2>Привет, {username}!</h2>
+    </header>
 
+    <div className="calendar-body">
       <SidebarMenu
         selectedDate={selectedDate}
         onAddNote={handleNoteAdded}
         onTodayClick={() => setSelectedDate(new Date())}
       />
-      </div>
 
       <CalendarContainer
         selectedDate={selectedDate}
@@ -44,14 +55,16 @@ export default function CalendarLayout({ username }) {
         ref={notesPanelRef}
         selectedDate={selectedDate}
       />
-
-      {showModal && (
-        <AddNoteModal
-          selectedDate={selectedDate}
-          onClose={() => setShowModal(false)}
-          onNoteAdded={handleNoteAdded}
-        />
-      )}
     </div>
-  );
+
+    {showModal && (
+      <AddNoteModal
+        selectedDate={selectedDate}
+        onClose={() => setShowModal(false)}
+        onNoteAdded={handleNoteAdded}
+      />
+    )}
+  </div>
+);
+
 }

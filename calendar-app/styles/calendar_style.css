@@ -151,8 +151,8 @@
   margin-left: 10px; /* расстояние от календаря */
   border-left: 1px solid #ddd;
   border-radius: 20px;
-  max-width: 600px; /* ограничение по ширине, чтобы не растягивалось слишком сильно */
-  min-width: 350px;
+  max-width: 400px; /* ограничение по ширине, чтобы не растягивалось слишком сильно */
+  min-width: 250px;
 }
 
 .note-item {
@@ -207,4 +207,34 @@
   font-size: 16px;
   padding: 8px;
   color: #333;
+}
+
+.calendar-body {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+}
+.calendar-body > * {
+  flex: 1;
+}
+
+@media (max-width: 768px) {
+  .calendar-body {
+    flex-direction: column;
+  }
+
+  .notes-panel {
+    order: 3; /* Чтобы NotesPanel была последней */
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.cache-indicator {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-color: orange;
+  border-radius: 50%;
+  margin-right: 5px;
 }

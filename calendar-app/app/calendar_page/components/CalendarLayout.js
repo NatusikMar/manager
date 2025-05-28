@@ -35,15 +35,13 @@ export default function CalendarLayout({ username }) {
 
   return (
   <div className="main-layout">
-    <header className="calendar-header">
-      <h2>Привет, {username}!</h2>
-    </header>
-
     <div className="calendar-body">
+      
       <SidebarMenu
         selectedDate={selectedDate}
         onAddNote={handleNoteAdded}
         onTodayClick={() => setSelectedDate(new Date())}
+        username = {username}
       />
 
       <CalendarContainer

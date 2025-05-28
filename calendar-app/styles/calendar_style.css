@@ -1,196 +1,69 @@
 .main-layout {
     display: flex;
+    flex-wrap: wrap;
     align-items: flex-start;
     gap: 30px;
     padding: 20px 40px;
 }
+.calendar-body {
+  width: 100%;
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  flex-wrap: wrap;
+}
 
-.sidebar-menu {
-    margin-top: 38px; 
-    left: 0;
-    top: 20px;
-    width: 180px;
-    padding: 10px;
-    background: #f4f4f4;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+/*--- Меню ---*/
+.sidebar-menu { 
+  min-width: 250px;
+  max-width: 500px;
+  padding: 10px;
+  background: #f4f4f4;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.hello{
+  width: 100%;
+  padding: 10px;
 }
 .sidebar-menu button {
-    display: block;
-    width: 100%;
-    margin-bottom: 10px;
-    padding: 10px;
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s ease;
+  width: 100%;
+  padding: 10px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
 .sidebar-menu button:hover {
     background: #0056b3;
 }
 
-
-.calendar-container{
-    width: auto;
-    background: white;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 20px;
-}
-.month-navigation {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    font-size: 20px;
-    font-weight: bold;
-    color: #444;
-}
-.month-navigation button {
-    background: rgba(255, 255, 255, 0.5);
-    border: none;
-    padding: 10px 15px;
-    font-size: 18px;
-    cursor: pointer;
-    border-radius: 50%;
-    transition: all 0.3s ease;
-}
-
-.month-navigation button:hover {
-    background: rgba(255, 255, 255, 0.8);
-    transform: scale(1.1);
-}
-
-.month-navigation button:active {
-    background: rgba(255, 255, 255, 1);
-    transform: scale(1);
-}
-
-.weekdays {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    font-weight: bold;
-    text-align: center;
-    padding: 5px 0;
-}
-.calendar {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
-    font-size: 20px;
-    color: #444;
-}
-
-.day {
-    padding: 10px;
-    text-align: center;
-    cursor: pointer;
-    background: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-}
-.day:hover {
-    transform: scale(1.05);
-}
-.selected {
-    background: #e0e0e0;
-    color: black;
-}
-.today {
-    background: #007bff; 
-    color: white;   
-}
-
-
-.sort-controls {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 10px;
-}
-
-.sort-button {
-    background: #007bff;
-    color: white;
-    padding: 8px 15px;
-    border: none;
-    border-radius: 10px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.sort-button:hover {
-    background: #0056b3;
-}
-
-.hidden {
-    display: none;
-}
-
-
-
-.sidebar {
-    margin-left: 20px;
-    padding: 20px;
-    background: white;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 20px;
-    width: 70%;
-}
-
-.notes-panel {
-  flex-grow: 1;
-  background-color: #f9f9f9;
-  padding: 20px;
-  margin-left: 10px; /* расстояние от календаря */
-  border-left: 1px solid #ddd;
-  border-radius: 20px;
-  max-width: 400px; /* ограничение по ширине, чтобы не растягивалось слишком сильно */
-  min-width: 250px;
-}
-
-.note-item {
-  margin-bottom: 0.5rem;
-}
-
-.tag {
-  margin-left: 0.5rem;
-  color: #2196f3;
-}
-
-.repeat {
-  margin-left: 0.5rem;
-  color: #777;
-}
-
+/*--- Календарь ---*/
 .calendar-wrapper {
+  min-width: 250px;
+  max-width: 500px;
   background: #fff;
   border: 1px solid #ccc;
   border-radius: 12px;
   padding: 16px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  max-width: 360px;
-  margin: 0 auto;
 }
-
 .react-calendar {
   border: none;
-  width: 500px;
+  width: 100%;
 }
-
-.react-calendar__tile {
-  border-radius: 8px;
-  padding: 10px 0;
+.react-calendar__navigation button {
+  font-size: 16px;
+  padding: 8px;
 }
 
 .react-calendar__tile--active {
-  background: #3b82f6 !important;
   color: #fff;
   border-radius: 8px;
 }
@@ -201,40 +74,24 @@
   border-radius: 8px;
 }
 
-.react-calendar__navigation button {
-  background: none;
-  border: none;
-  font-size: 16px;
-  padding: 8px;
-  color: #333;
-}
 
-.calendar-body {
-  display: flex;
-  gap: 1rem;
-  padding: 1rem;
-}
-.calendar-body > * {
-  flex: 1;
-}
 
-@media (max-width: 768px) {
-  .calendar-body {
-    flex-direction: column;
+
+@media (max-width: 880px) {
+  .main-layout{
+    padding: 20px;
   }
-
-  .notes-panel {
-    order: 3; /* Чтобы NotesPanel была последней */
+  .sidebar-menu {
     width: 100%;
-    max-width: none;
+    flex-direction: row;
+    flex-wrap: wrap;
+    
   }
-}
-
-.cache-indicator {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  background-color: orange;
-  border-radius: 50%;
-  margin-right: 5px;
+  .sidebar-menu button {
+    flex: 1 1 calc(50% - 10px);
+  }
+  .notes-panel {
+    order: 3;
+    width: 100%;
+  }
 }

@@ -6,7 +6,7 @@ import AddNoteModal from './AddNoteModal';
 import { clearLocalData } from '../utils/localDB';
 
 
-export default function SidebarMenu({ selectedDate, onAddNote, onTodayClick }) {
+export default function SidebarMenu({ selectedDate, onAddNote, onTodayClick, username }) {
     const [showModal, setShowModal] = useState(false);
     const [deferredPrompt, setDeferredPrompt] = useState(null);
     const [showInstall, setShowInstall] = useState(false);
@@ -38,10 +38,10 @@ export default function SidebarMenu({ selectedDate, onAddNote, onTodayClick }) {
         }
     };
 
-// PWA установка
+    // PWA установка
     useEffect(() => {
     const handleBeforeInstallPrompt = (e) => {
-        console.log('Событие beforeinstallprompt получено');
+        //console.log('Событие beforeinstallprompt получено');
         e.preventDefault(); 
         setDeferredPrompt(e);
         setShowInstall(true); 
@@ -62,13 +62,11 @@ export default function SidebarMenu({ selectedDate, onAddNote, onTodayClick }) {
 
     return () => {
         window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-    };
-}, []);
-
-
+        };
+    }, []);
 
     const handleInstallClick = async () => {
-        console.log('Клик по кнопке установки');
+        //console.log('Клик по кнопке установки');
         if (!deferredPrompt) {
             console.log('deferredPrompt отсутствует');
             return;
@@ -90,11 +88,9 @@ export default function SidebarMenu({ selectedDate, onAddNote, onTodayClick }) {
 
   return (
     <div className="sidebar-menu">
+        <h3 className='hello'>Привет, {username}!</h3>
         <button onClick={onTodayClick}>Сегодня</button>
         <button onClick={() => setShowModal(true)}>Добавить заметку</button>
-        {showInstall && (
-            <button onClick={handleInstallClick}>Установить приложение</button>
-        )}
         <button onClick={handleLogout}>Выйти</button>
         {showModal && (
             <AddNoteModal

@@ -1,5 +1,6 @@
 /* Панель заметок */
 .notes-panel {
+  min-width: 250px;
   background: #fff;
   border-radius: 10px;
   padding: 16px;
@@ -9,10 +10,20 @@
   gap: 8px;
 }
 
+/* Заметки на ... */
 .notes-panel h3 {
+  padding: 10px;
   font-size: 18px;
   font-weight: 600;
-  margin-bottom: 8px;
+}
+
+/* Панель фильтров */
+.filters {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
 }
 
 /* Скролл области */
@@ -29,57 +40,23 @@
   margin: 0;
 }
 
-.notes-list.list .note-item,
-.notes-list.cards .note-item {
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  background: #fff;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.notes-list.list .note-item {
+.notes-list.list .note-item { /* Элемент заметки */
   padding: 12px;
   display: inline-block;
   margin: 5px;
-}
-
-.notes-list.cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 12px;
-}
-
-.notes-list.cards .note-item {
-  padding: 14px;
-}
-
-/* Элемент заметки */
-.note-item {
-  padding: 10px;
   border: 1px solid #ccc;
-  border-radius: 8px;
-  background: white;
-  word-wrap: break-word;
-  margin-bottom: 8px;
-  transition: background 0.2s;
-}
-
-.note-item:hover {
-  background-color: #f5f5f5;
+  border-radius: 10px;
+  background: #fff;
 }
 
 /* Заголовок заметки */
 .note-header {
-  justify-content: space-between;
   font-size: 0.85rem;
   color: #666;
 }
 
 /* Название заметки */
 .note-name {
-  flex-grow: 1;
   font-size: 1rem;
   font-weight: 500;
   margin: 6px 0;
@@ -92,7 +69,6 @@
 /* Метка времени */
 .note-time {
   font-weight: bold;
-  width: 50px;
 }
 
 /* Метки (теги) */
@@ -132,15 +108,8 @@
   padding: 8px;
 }
 
-/* Панель фильтров */
-.filters {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 12px;
-}
 
+/* Оффлайн */
 /* Блок действий */
 .note-actions {
   margin-top: 6px;
